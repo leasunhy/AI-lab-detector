@@ -46,6 +46,7 @@ class Predictor(modelFile: InputStream) {
   def set(att: Attribute, value: String): Unit = inst.setValue(att, value)
 
   def classify(): String = inst.classAttribute().value(classifier.classifyInstance(inst).toInt)
+  def classifyIndex(): Int = classifier.classifyInstance(inst).toInt
 
   set(Attributes.gx, 0.0)
   set(Attributes.gy, 0.0)
