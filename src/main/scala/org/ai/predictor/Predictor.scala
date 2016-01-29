@@ -10,7 +10,7 @@ import weka.classifiers.bayes.NaiveBayes
   * Created by leasunhy on 1/29/16.
   */
 
-object FastVectorComp {
+object FastVector {
   def apply[T](elems: T*): FastVector = {
     val result = new FastVector(elems.size)
     elems.foreach(result.addElement(_))
@@ -26,11 +26,13 @@ class Predictor(modelFile: InputStream) {
     val o1 = new Attribute("o1")
     val o2 = new Attribute("o2")
     val o3 = new Attribute("o3")
-    val distance = new Attribute("distance", FastVectorComp("Near", "Far"))
+    val distance = new Attribute("distance", FastVector("Near", "Far"))
     val light = new Attribute("light")
-    val label = new Attribute("label", FastVectorComp("唱歌", "喝咖啡", "走路", "关窗"))
+    val label = new Attribute("label", FastVector("唱歌", "喝咖啡", "走路", "关窗"))
 
-    val attributes = FastVectorComp(gx, gy, gz, o1, o2, o3, distance, light, label)
+    val acceleration = Vector(gx, gy, gz)
+    val orientation = Vector(o1, o2, o3)
+    val attributes = FastVector(gx, gy, gz, o1, o2, o3, distance, light, label)
   }
   val dataset = new Instances("AI", Attributes.attributes, Attributes.attributes.size())
   dataset.setClassIndex(Attributes.attributes.size() - 1)

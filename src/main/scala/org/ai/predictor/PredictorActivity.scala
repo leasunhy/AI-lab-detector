@@ -1,20 +1,20 @@
 package org.ai.predictor
 
-import android.widget.Toast
-import org.scaloid.common.{SActivity, STextView, toast, SVerticalLayout, Int2unitConversion}
+import scala.collection.JavaConversions._
+import org.scaloid.common._
 import android.graphics.Color
 import android.content.Context
-import android.view.Gravity
 import android.hardware.{Sensor, SensorEvent, SensorEventListener, SensorManager}
 
 class PredictorActivity extends SActivity with SensorEventListener {
-  lazy val predictor = new Predictor(getResources().openRawResource(R.raw.trained))
 
-  lazy val prediction = new STextView("200")
+  lazy val prediction = new STextView("Init")
 
   onCreate {
-    contentView = new SVerticalLayout {
-      prediction.textSize(20.dip).<<(WRAP_CONTENT, WRAP_CONTENT).>>.here
+    contentView = new SLinearLayout {
+      new SVerticalLayout {
+        prediction.textSize(30.dip).here
+      }.wrap.here
     } padding 20.dip
   }
 
@@ -22,27 +22,29 @@ class PredictorActivity extends SActivity with SensorEventListener {
     registerSensorListeners()
   }
 
-  def registerSensorListeners(): Unit = {
-    import scala.collection.JavaConversions._
-    val manager = getSystemService(Context.SENSOR_SERVICE).asInstanceOf[SensorManager]
-    val f = manager.registerListener(this, _: Sensor, SensorManager.SENSOR_DELAY_NORMAL)
-    manager.getSensorList(Sensor.TYPE_ACCELEROMETER).foreach(f)
-    manager.getSensorList(Sensor.TYPE_ORIENTATION).foreach(f)
-    manager.getSensorList(Sensor.TYPE_PROXIMITY).foreach(f)
-    manager.getSensorList(Sensor.TYPE_LIGHT).foreach(f)
+  onPause {
+    unregisterSensorListeners()
   }
+
+  lazy val sensors = sensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER) ++
+                     sensorManager.getSensorList(Sensor.TYPE_ORIENTATION) ++
+                     sensorManager.getSensorList(Sensor.TYPE_PROXIMITY) ++
+                     sensorManager.getSensorList(Sensor.TYPE_LIGHT)
+
+  def registerSensorListeners(): Unit =
+    sensors.foreach(sensorManager.registerListener(this, _: Sensor, SensorManager.SENSOR_DELAY_NORMAL))
+
+  def unregisterSensorListeners(): Unit = sensorManager.unregisterListener(this)
+
+  lazy val predictor = new Predictor(getResources().openRawResource(R.raw.trained))
 
   def onSensorChanged(event: SensorEvent): Unit = {
     val atts = predictor.Attributes
     event.sensor.getType() match {
       case Sensor.TYPE_ACCELEROMETER =>
-        predictor.set(atts.gx, event.values(0))
-        predictor.set(atts.gy, event.values(1))
-        predictor.set(atts.gz, event.values(2))
+        (atts.acceleration, event.values).zipped.foreach(predictor.set(_, _))
       case Sensor.TYPE_ORIENTATION =>
-        predictor.set(atts.o1, event.values(0))
-        predictor.set(atts.o2, event.values(1))
-        predictor.set(atts.o3, event.values(2))
+        (atts.orientation, event.values).zipped.foreach(predictor.set(_, _))
       case Sensor.TYPE_PROXIMITY =>
         predictor.set(atts.distance, if (event.values(0) == 0)  "Near" else "Far")
       case Sensor.TYPE_LIGHT =>
@@ -55,3 +57,4 @@ class PredictorActivity extends SActivity with SensorEventListener {
   def onAccuracyChanged(s: Sensor, accuracy: Int): Unit = {}
 
 }
+
