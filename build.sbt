@@ -18,7 +18,10 @@ proguardOptions in Android ++= Seq("-dontobfuscate", "-dontoptimize", "-keepattr
   //, "-keep class android.support.v4.app.** { *;} "
   //, "-keep interface android.support.v4.app.** { *;} "
   //, "-keep class com.actionbarsherlock.** { *;} "
-  , "-keep class org.scaloid.common.** { *;} "
+  , "-keep class org.scaloid.common.*Layout { *;} "
+  , "-keep class org.scaloid.common.Trait* { *;} "
+  , "-keep class org.scaloid.common.STextView { *;} "
+  , "-keep class org.scaloid.common.SButton { *;} "
   , "-keep class weka.classifiers.bayes.NaiveBayes { *;} "
   , "-keep class org.ai.predictor.** { *;} "
 )
