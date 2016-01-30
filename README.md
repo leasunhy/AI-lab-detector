@@ -34,6 +34,24 @@ AI-Lab-Detector
 
 Weka基于GPL协议。
 
+
+构建
+----
+先保证sbt已安装，然后
+
+```bash
+$ sbt android:package
+```
+
+这会生成一个Apk文件，位于`<project root>/target/android/output/ai-lab-detector-debug.apk`。
+
+由于sbt的Android插件有一些Bug，如果出错，可以尝试：
+
+1. 再dex一次，实际上只需：`$ sbt android:package`。
+2. 清除缓存：`$ rm -rf target`。然后重新开始构建。
+
+详见[pocorall/hello-scaloid-sbt](https://github.com/pocorall/hello-scaloid-sbt)和[pfn/android-sdk-plugin](https://github.com/pfn/android-sdk-plugin)。
+
 License
 -------
 GPL V3.0.
