@@ -52,6 +52,21 @@ $ sbt android:package
 
 详见[pocorall/hello-scaloid-sbt](https://github.com/pocorall/hello-scaloid-sbt)和[pfn/android-sdk-plugin](https://github.com/pfn/android-sdk-plugin)。
 
+
+开发
+----
+如果想要修改模型，按以下步骤：
+
+1. 收集数据。
+2. 将数据组织为Weka所用的ARFF格式。格式说明详见Weka文档。
+3. 在命令行中用Weka训练模型并保存到文件：`$ java -cp weka-3.6.6-android.jar weka.classifiers.bayes.NaiveBayes -t data.arff -d trained.model`。
+   如果不希望使用`Naive Bayes`分类器， 只需更改命令中的类名和`build.sbt`文件中的Proguard选项，让其在裁剪时保留所使用的分类器类以便序列化。
+4. 将保存的模型（实际上是Serialized的对象）保存至`src/main/res/raw/trained.model`。
+5. 修改`src/main/scala/org/ai/predictor/Predictor.scala`中`Predictor`类的定义，尤其是`Predictor.Attributes`对象。为了有趣，修改`emojis`成员。
+6. 修改`src/main/scala/org/ai/predictor/PredictorActivity.scala`中有关获取传感器数据的部分。
+7. 构建即可。
+
+
 License
 -------
 GPL V3.0.
