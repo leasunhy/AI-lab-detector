@@ -1,4 +1,4 @@
-name := "hello-scaloid-sbt"
+name := "ai-lab-detector"
 
 import android.Keys._
 android.Plugin.androidBuild
