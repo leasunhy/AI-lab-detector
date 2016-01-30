@@ -1,23 +1,18 @@
 package org.ai.predictor
 
-import android.view.Gravity
-
 import scala.collection.JavaConversions._
-import org.scaloid.common._
+import android.widget.TextView
 import android.graphics.Color
 import android.hardware.{Sensor, SensorEvent, SensorEventListener, SensorManager}
+import android.support.v7.app.AppCompatActivity
+import org.scaloid.common._
 
-class PredictorActivity extends SActivity with SensorEventListener {
+class PredictorActivity extends AppCompatActivity with SActivity with SensorEventListener {
 
-  lazy val prediction = new STextView("Init")
+  lazy val prediction = find[TextView](R.id.prediction)
 
   onCreate {
-    contentView = new SVerticalLayout {
-      STextView("你正在：") textSize 30.dip textColor Color.CYAN
-      new SLinearLayout {
-        prediction.textSize(50.dip).gravity(Gravity.CENTER).fill.here
-      }.fill.here
-    } padding 20.dip
+    setContentView(R.layout.main_layout)
   }
 
   onResume {
@@ -55,8 +50,10 @@ class PredictorActivity extends SActivity with SensorEventListener {
           predictor.set(atts.light, event.values(0))
         case _ => toast("Unexpected SensorChanged event.")
       }
-      prediction.text(predictor.classify())
-      prediction.textColor(textColors(predictor.classifyIndex()))
+      val classIndex = predictor.classifyIndex()
+      prediction.text(predictor.classEmoji(classIndex))
+//      prediction.text(predictor.className(classIndex))
+//      prediction.textColor(textColors(classIndex))
     }
   }
 

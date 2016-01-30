@@ -4,7 +4,6 @@ import java.io.InputStream
 
 import weka.core.{FastVector, Attribute, Instance, Instances}
 import weka.classifiers.Classifier
-import weka.classifiers.bayes.NaiveBayes
 
 /**
   * Created by leasunhy on 1/29/16.
@@ -45,11 +44,10 @@ class Predictor(modelFile: InputStream) {
   def set(att: Attribute, value: Double): Unit = inst.setValue(att, value)
   def set(att: Attribute, value: String): Unit = inst.setValue(att, value)
 
-  def classify(): String = inst.classAttribute().value(classifier.classifyInstance(inst).toInt)
   def classifyIndex(): Int = classifier.classifyInstance(inst).toInt
 
-  set(Attributes.gx, 0.0)
-  set(Attributes.gy, 0.0)
-  set(Attributes.gz, 0.0)
+  def className(index: Int): String = inst.classAttribute().value(index)
+  val emojis = Vector("\uD83C\uDFA4", "\uD83C\uDF75", "\uD83D\uDEB6", "\uD83D\uDEAA")
+  def classEmoji(index: Int): String = emojis(index)
 }
 

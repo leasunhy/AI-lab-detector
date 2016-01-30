@@ -2,11 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="org.ai.predictor"
           android:versionCode="1"
-          android:versionName="1.0">
+          android:versionName="1.1">
 
   <uses-sdk android:targetSdkVersion="16" android:minSdkVersion="10"/>
 
-  <application android:label="@string/app_name" >
+  <application android:label="@string/app_name"
+               android:theme="@style/AppTheme"
+               android:icon="@mipmap/ic_launcher">
     <activity android:name="org.ai.predictor.PredictorActivity"
               android:label="@string/app_name">
       <intent-filter>

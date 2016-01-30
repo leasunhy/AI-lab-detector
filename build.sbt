@@ -10,6 +10,8 @@ scalacOptions in Compile += "-feature"
 updateCheck in Android := {} // disable update check
 proguardCache in Android ++= Seq("org.scaloid")
 
+platformTarget in Android := "android-23"
+
 proguardOptions in Android ++= Seq("-dontobfuscate", "-dontoptimize", "-keepattributes Signature", "-printseeds target/seeds.txt", "-printusage target/usage.txt"
   , "-dontwarn scala.collection.**" // required from Scala 2.11.4
   , "-dontwarn org.scaloid.**" // this can be omitted if current Android Build target is android-16
@@ -26,7 +28,10 @@ proguardOptions in Android ++= Seq("-dontobfuscate", "-dontoptimize", "-keepattr
   , "-keep class org.ai.predictor.** { *;} "
 )
 
-libraryDependencies += "org.scaloid" %% "scaloid" % "4.1"
+libraryDependencies ++= Seq(
+  "org.scaloid" %% "scaloid" % "4.1",
+  aar("com.android.support" % "appcompat-v7" % "23.1.1")
+)
 
 run <<= run in Android
 install <<= install in Android

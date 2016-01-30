@@ -2,4 +2,6 @@
 <resources>
 	<string name="red">Red alert!</string>
 	<string name="app_name">The All-knower</string>
+	<string name="you_doing">你正在：</string>
+	<string name="prediction_init">Init</string>
 </resources>
